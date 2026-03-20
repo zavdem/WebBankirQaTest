@@ -1,4 +1,5 @@
 import TestConfig.BASE_URL
+import models.UserPayload
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -23,16 +24,15 @@ class UserTest : BaseTest() {
     @Test
     @DisplayName("Создание и удаление пользователя")
     fun test() {
-        driver.get("$BASE_URL/admin/users")
+        usersPage.open()
 
-        val userLocator = By.xpath("//td[text()='$name']")
-        wait.until(ExpectedConditions.visibilityOfElementLocated(userLocator))
+        usersPage.waitUserVisible(name)
 
-        val deleteResponse = apiClient.deleteUser(userId)
-        assert(deleteResponse.statusCode == 204) { "Пользователь не удален" }
+        apiClient.deleteUser(userId).then().statusCode(204)
 
         driver.navigate().refresh()
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(userLocator))
+
+        usersPage.waitUserInvisible(name)
     }
 
     @AfterEach

@@ -19,7 +19,7 @@ public class UserApiClient {
                         .setParam("http.socket.timeout", timeout));
     }
 
-    public Response createUser(UserPayload payload) {
+    public Response createUser(models.UserPayload payload) {
         return given()
                 .config(config)
                 .baseUri(baseUrl)
